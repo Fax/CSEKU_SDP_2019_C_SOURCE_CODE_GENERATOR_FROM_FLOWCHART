@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Graphics_Test.Controls;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +13,20 @@ using System.Windows.Forms;
 
 namespace Graphics_Test
 {
+
+    public enum MouseAction
+    {
+        Idle,
+        Start,
+        End,
+        Var,
+        Loop,
+        Print,
+        Scan,
+        If,
+        Rect,
+        Connect,
+    }
     public partial class MainForm : Form
     {
         string str;
@@ -24,9 +39,9 @@ namespace Graphics_Test
         int codeField;
 
 
-        int rr, ss,temp,temp1,a1,b1,c1;
-        int fc = 1 ;
-        //int sfc = 0;
+        int rr, ss, temp, temp1, a1, b1, c1;
+        int fc = 1;
+        
         int qq = 1;
         int index;
         int bi = 0, ti = 0, li = 0, bti = 0, tti = 0, lti = 0;
@@ -39,44 +54,33 @@ namespace Graphics_Test
         int[] H = new int[200];
         int[] P = new int[200];
 
-        //int xx = 0, yy = 0, ww = 0, hh = 0, pp=0;
-    
-
         private ArrayList pointsCircle = new ArrayList();
         private ArrayList pointsECircle = new ArrayList();
         private ArrayList pointsRect = new ArrayList();
         private ArrayList pointsConnect = new ArrayList();
         private ArrayList pointsPargram = new ArrayList();
         private ArrayList pointsCondition = new ArrayList();
-        private ArrayList writeVar  = new ArrayList();
+        private ArrayList writeVar = new ArrayList();
         private ArrayList pointsForLoop = new ArrayList();
 
-        private bool isCircleClickd = false;
-        private bool isRectClicked = false;
-        private bool isConnectClicked = false;
-        private bool isEndCircleClickd = false;
-        private bool isPargramClickedVar = false;
-        private bool isPargramClickedScan = false;
-        private bool isPargramClickedPrint = false;
-        private bool isCondition = false;
-        private bool isForLoop = false;
 
         public MainForm()
         {
+            this.currentAction = MouseAction.Idle;
             InitializeComponent();
         }
+
+        private MouseAction currentAction;
 
         //int z = 0, x=0, y=0;
 
 
         //For flowchart shapes and popup boxes..
-        //int bi = 0, ti = 0, li=0 , bti = 0, tti = 0, lti = 0;
         Button[] b = new Button[200];
         TextBox[] t = new TextBox[200];
         Label[] l = new Label[200];
 
         //For inserting the input values into the flowchart..
-        //int bti = 0, tti = 0, lti = 0;
         Button[] b2 = new Button[200];
         TextBox[] t2 = new TextBox[200];
         Label[] l2 = new Label[200];
@@ -84,845 +88,756 @@ namespace Graphics_Test
         //For FlowChart Number..
         Label[] fn = new Label[500];
 
-        int p, q,pt,qt, pf, qf , pcon, qcon , pind , qind, pins, qins;
+        int p, q, pt, qt, pf, qf, pcon, qcon, pind, qind, pins, qins;
+
+
 
         private void button_circle_Click(object sender, EventArgs e)
         {
-            isRectClicked = false;
-            isCircleClickd = true;
-            isConnectClicked = false;
-            isEndCircleClickd = false;
-            isPargramClickedVar = false;
-            isPargramClickedScan = false;
-            isPargramClickedPrint = false;
-            isCondition = false;
-            isForLoop = false;
+            currentAction = MouseAction.Start;
+
         }
 
         private void button_Rect_Click(object sender, EventArgs e)
         {
-            isRectClicked = true;
-            isCircleClickd = false;
-            isConnectClicked = false;
-            isEndCircleClickd = false;
-            isPargramClickedVar = false;
-            isPargramClickedScan = false;
-            isPargramClickedPrint = false;
-            isCondition = false;
-            isForLoop = false;
+
+            currentAction = MouseAction.Rect;
+
         }
 
         private void button_connect_Click(object sender, EventArgs e)
         {
-            isCircleClickd = false;
-            isRectClicked = false;
-            isConnectClicked = true;
-            isEndCircleClickd = false;
-            isPargramClickedVar = false;
-            isPargramClickedScan = false;
-            isPargramClickedPrint = false;
-            isCondition = false;
-            isForLoop = false;
+            currentAction = MouseAction.Connect;
         }
 
 
         private void button_EndCircle_Click(object sender, EventArgs e)
         {
-            isCircleClickd = false;
-            isRectClicked = false;
-            isConnectClicked = false;
-            isEndCircleClickd = true;
-            isPargramClickedVar = false;
-            isPargramClickedScan = false;
-            isPargramClickedPrint = false;
-            isCondition = false;
-            isForLoop = false;
+            currentAction = MouseAction.End;
         }
 
         private void button_Pargram_Click(object sender, EventArgs e)
         {
-            isCircleClickd = false;
-            isRectClicked = false;
-            isConnectClicked = false;
-            isEndCircleClickd = false;
-            isPargramClickedVar = true;
-            isPargramClickedScan = false;
-            isPargramClickedPrint = false;
-            isCondition = false;
-            isForLoop = false;
+            currentAction = MouseAction.Var;
         }
 
 
         private void button_PargramScan_Click(object sender, EventArgs e)
         {
-            isCircleClickd = false;
-            isRectClicked = false;
-            isConnectClicked = false;
-            isEndCircleClickd = false;
-            isPargramClickedVar = false;
-            isPargramClickedScan = true;
-            isPargramClickedPrint = false;
-            isCondition = false;
-            isForLoop = false;
+            currentAction = MouseAction.Scan;
+
         }
 
         private void PargramPrint_Click(object sender, EventArgs e)
         {
-            isCircleClickd = false;
-            isRectClicked = false;
-            isConnectClicked = false;
-            isEndCircleClickd = false;
-            isPargramClickedVar = false;
-            isPargramClickedScan = false;
-            isPargramClickedPrint = true;
-            isCondition = false;
-            isForLoop = false;
+            currentAction = MouseAction.Print;
         }
 
         private void Condition_Click(object sender, EventArgs e)
         {
-            isCircleClickd = false;
-            isRectClicked = false;
-            isConnectClicked = false;
-            isEndCircleClickd = false;
-            isPargramClickedVar = false;
-            isPargramClickedScan = false;
-            isPargramClickedPrint = false;
-            isCondition = true;
-            isForLoop = false;
+            currentAction = MouseAction.If;
         }
 
         private void forLoop_Click(object sender, EventArgs e)
         {
-            isCircleClickd = false;
-            isRectClicked = false;
-            isConnectClicked = false;
-            isEndCircleClickd = false;
-            isPargramClickedVar = false;
-            isPargramClickedScan = false;
-            isPargramClickedPrint = false;
-            isCondition = false;
-            isForLoop = true;
+
+            currentAction = MouseAction.Loop;
 
         }
 
         private void MainForm_MouseDown(object sender, MouseEventArgs e)
         {
-           // Graphics g = Graphics.FromHwnd(this.Handle);
+            // Graphics g = Graphics.FromHwnd(this.Handle);
 
             // Add to points collection.
 
-            //Start Program Button..
-            if (isCircleClickd == true)         
+            switch (currentAction)
             {
-                pointsCircle.Add(new Point(e.X, e.Y));
-
-                isCircleClickd = false;
-
-                Label l = new Label();
-                l.Location = new Point(e.X + 30, e.Y + 15);
-                l.Size = new Size(60, 20);
-                // l.BackColor = Color.Blue;
-                l.Text = "Start";
-                l.Font = new Font("Arial", 12);
-                l.ForeColor = Color.Black;
-                Controls.Add(l);
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 15, e.Y - 10);
-                fn[fc].Size = new Size(30, 15);
-                string qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "start";
-
-                fc++;
-                qq++;
-
-                code[cc] = "#include<stdio.h> \n\nint main() \n{";
-                codeC[cc] = "#include<stdio.h> \n\nint main() \n{";
-                cc++;
-
-                Invalidate();
+                case MouseAction.Start:
+                    CircleHandler(e);
+                    break;
+                case MouseAction.End:
+                    EndCircleHandler(e);
+                    break;
+                case MouseAction.If:
+                    ConditionHandler(e);
+                    break;
+                case MouseAction.Loop:
+                    LoopHandler(e);
+                    break;
+                case MouseAction.Connect:
+                    break;
+                case MouseAction.Print:
+                    PrintHandler(e);
+                    break;
+                case MouseAction.Scan:
+                    ScanHandler(e);
+                    break;
+                case MouseAction.Var:
+                    VarHandler(e);
+                    break;
+                default: break;
             }
+            currentAction = MouseAction.Idle;
+        }
+
+        private void LoopHandler(MouseEventArgs e)
+        {
+            pointsForLoop.Add(new Point(e.X, e.Y));
+
+
 
+            l[li] = new Label();
+            l[li].Location = new Point(350, 200);
+            l[li].Size = new Size(300, 100);
+            l[li].BackColor = Color.Bisque;
+            l[li].Text = "Initialize ";
+            l[li].Font = new Font("Ariel", 12);
+
+            t[ti] = new TextBox();
+            t[ti].Location = new Point(380, 250);
+            t[ti].BackColor = Color.AntiqueWhite;
 
-            //End Program Button..
-            else if (isEndCircleClickd == true)
-            {
-                pointsECircle.Add(new Point(e.X, e.Y));
-
-                isEndCircleClickd = false;
+            b[bi] = new Button();
+            b[bi].Parent = this;
+            b[bi].Location = new System.Drawing.Point(580, 255);
+            b[bi].Size = new System.Drawing.Size(30, 20);
+            b[bi].Name = "New_bs";
+            b[bi].Text = "Ok";
 
-                Label l = new Label();
-                l.Location = new Point(e.X - 25, e.Y + 46);
-                l.Size = new Size(60, 20);
-                l.Text = "End";
-                l.Font = new Font("Arial", 12);
-                l.ForeColor = Color.Black;
-                Controls.Add(l);
+            z = ti;
+            x = li;
+            y = bi;
+
+            pp = fc;
+
+            b[bi].Click += (sender1, ex) => this.DisplayForLoop();
+
+            Controls.Add(b[bi]);
+            Controls.Add(t[ti]);
+            Controls.Add(l[li]);
+
+            fn[fc] = new Label();
+            fn[fc].Location = new Point(e.X - 35, e.Y + 10);
+            fn[fc].Size = new Size(30, 15);
+            string qs = qq.ToString();
+            fn[fc].Text = qs;
+            fn[fc].Font = new Font("Arial", 12);
+            fn[fc].ForeColor = Color.Black;
+            Controls.Add(fn[fc]);
+
+            fcn[fc] = "loopIn";
+
+            xx = fc;
+            yy = fc;
+            ww = fc;
+            hh = fc;
+
+            fc++;
+            qq++;
+
+            p = e.X - 15;
+            q = e.Y + 40;
 
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 55, e.Y + 10);
-                fn[fc].Size = new Size(30, 15);
-                string qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "end";
-
-                fc++;
-                qq++;
-
-                code[cc] = "return 0; \n}";
-                codeC[cc] = "return 0; \n}";
-                cc++;
-
-                Invalidate();
-            }
-
-
-            //Processes Button..
-            else if (isRectClicked == true)
-            {
-                pointsRect.Add(new Point(e.X, e.Y));
-
-                isRectClicked = false;
-
-                //TextBox t = new TextBox();
-                l[li] = new Label();
-                l[li].Location = new Point(350, 200);
-                l[li].Size = new Size(300, 100);
-                l[li].BackColor = Color.Bisque;
-                l[li].Text = "Process : ";
-                l[li].Font = new Font("Ariel", 12);
-
-                t[ti] = new TextBox();
-                t[ti].Location = new Point(380, 250);
-                t[ti].BackColor = Color.AntiqueWhite;
-
-                b[bi] = new Button();
-                b[bi].Parent = this;
-                b[bi].Location = new System.Drawing.Point(580, 255);
-                b[bi].Size = new System.Drawing.Size(60, 30);
-                b[bi].Name = "New_b";
-                b[bi].Text = "Ok";
-
-                z = ti;
-                x = li;
-                y = bi;
-
-                pp = fc; 
-
-                b[bi].Click += (sender1, ex) => this.DisplayProcess();
-
-                Controls.Add(b[bi]);
-                Controls.Add(t[ti]);
-                Controls.Add(l[li]);
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 55, e.Y + 10);
-                fn[fc].Size = new Size(30, 15);
-                string qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "process";
-
-                xx = fc;
-                yy = fc;
-                ww = fc;
-                hh = fc;
-                //pp = fc;
-
-                fc++;
-                qq++;
-
-                str = t[ti].Text;
-
-                p = e.X - 45;
-                q = e.Y + 40;
-
-                X[xx] = p;
-                Y[yy] = q;
-                W[ww] = 60;
-                H[hh] = 20;
-
-                li++;
-                bi++;
-                ti++;
-
-                Invalidate();
-            }
-
-            //Connector Button (need to change)
-            //else if (isConnectClicked == true)
-            //{
-            //    pointsConnect.Add(new Point(e.X, e.Y));
-            //    Invalidate();
-            //}
-            //Taking Variables Button..
-            else if(isPargramClickedVar == true)
-            {
-                pointsPargram.Add(new Point(e.X, e.Y));
-
-                isPargramClickedVar = false;
-
-                //TextBox t = new TextBox();
-
-                l[li] = new Label();
-                l[li].Location = new Point(350, 200);
-                l[li].Size = new Size(300, 100);
-                l[li].BackColor = Color.Bisque;
-                l[li].Text = "Take Variables";
-                l[li].Font = new Font("Ariel", 12);
-
-                t[ti] = new TextBox();
-                t[ti].Location = new Point(380, 250);
-                t[ti].BackColor = Color.AntiqueWhite;
-
-                b[bi] = new Button();
-                b[bi].Parent = this;
-                b[bi].Location = new System.Drawing.Point(580, 255);
-                b[bi].Size = new System.Drawing.Size(60, 30);
-                b[bi].Name = "New_b";
-                b[bi].Text = "Ok";
-
-                z = ti;
-                x = li;
-                y = bi;
-
-                pp = fc; 
-
-                b[bi].Click += (sender1, ex) => this.DisplayTakeVar();
-
-                Controls.Add(b[bi]);
-                Controls.Add(t[ti]);
-                Controls.Add(l[li]);
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 55, e.Y + 10);
-                fn[fc].Size = new Size(30, 15);
-                string qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "tVar";
-
-                xx = fc;
-                yy = fc;
-                ww = fc;
-                hh = fc;
-
-                fc++;
-                qq++;
-
-                Label ll = new Label();
-                ll.Location = new Point(e.X - 60, e.Y + 40);
-                ll.Size = new Size(35, 20);
-                ll.Text = "int";
-                ll.Font = new Font("Arial", 14);
-                ll.ForeColor = Color.Black;
-                Controls.Add(ll);
-
-                p = e.X - 27;
-                q = e.Y + 40;
-
-                X[xx] = p;
-                Y[yy] = q;
-                W[ww] = 60;
-                H[hh] = 20;
-
-                li++;
-                bi++;
-                ti++;
-
-                Invalidate();
-            }
-            else if(isPargramClickedScan == true)
-            {
-                pointsPargram.Add(new Point(e.X, e.Y));
-
-                isPargramClickedScan = false;
-
-                //Label ls = new Label();
-                l[li] = new Label();
-                l[li].Location = new Point(350, 200);
-                l[li].Size = new Size(300, 100);
-                l[li].BackColor = Color.Bisque;
-                l[li].Text = "Read Variables";
-                l[li].Font = new Font("Ariel", 12);
-
-                //TextBox ts = new TextBox();
-                t[ti] = new TextBox();
-                t[ti].Location = new Point(380, 250);
-                t[ti].BackColor = Color.AntiqueWhite;
-
-                // Button bs = new Button();
-                b[bi] = new Button();
-                b[bi].Parent = this;
-                b[bi].Location = new System.Drawing.Point(580, 255);
-                b[bi].Size = new System.Drawing.Size(35, 20);
-                b[bi].Name = "New_bs";
-                b[bi].Text = "Ok";
-
-                z = ti;
-                x = li;
-                y = bi;
-
-                pp = fc; 
-
-                b[bi].Click += (sender1, ex) => this.DisplayReadVar();
-
-                Controls.Add(b[bi]);
-                Controls.Add(t[ti]);
-                Controls.Add(l[li]);
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 55, e.Y + 10);
-                fn[fc].Size = new Size(30, 15);
-                string qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "rVar";
-
-                xx = fc;
-                yy = fc;
-                ww = fc;
-                hh = fc;
-
-                fc++;
-                qq++;
-
-                Label ll = new Label();
-                ll.Location = new Point(e.X - 54, e.Y + 40);
-                ll.Size = new Size(50, 20);
-                ll.Text = "Read";
-                ll.Font = new Font("Arial", 12);
-                ll.ForeColor = Color.Black;
-                Controls.Add(ll);
-
-                p = e.X - 5;
-                q = e.Y + 40;
-
-                X[xx] = p;
-                Y[yy] = q;
-                W[ww] = 60;
-                H[hh] = 20;
-
-                li++;
-                bi++;
-                ti++;
-
-                Invalidate();
-            }
-            else if(isPargramClickedPrint == true)
-            {
-                pointsPargram.Add(new Point(e.X, e.Y));
-
-                isPargramClickedPrint = false;
-
-                l[li] = new Label(); 
-                l[li].Location = new Point(350, 200);
-                l[li].Size = new Size(300, 100);
-                l[li].BackColor = Color.Bisque;
-                l[li].Text = "Print Output";
-                l[li].Font = new Font("Ariel", 12);
-
-                t[ti] = new TextBox();
-                t[ti].Location = new Point(380, 250);
-                t[ti].BackColor = Color.AntiqueWhite;
-
-                b[bi] = new Button();
-                b[bi].Parent = this;
-                b[bi].Location = new System.Drawing.Point(580, 255);
-                b[bi].Size = new System.Drawing.Size(35, 20);
-                b[bi].Text = "Ok";
-
-                z = ti;
-                x = li;
-                y = bi;
-
-                pp = fc;
-
-                b[bi].Click += (sender1, ex) => this.DisplayPrintVar();
-
-                Controls.Add(b[bi]);
-                Controls.Add(t[ti]);
-                Controls.Add(l[li]);
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 55, e.Y + 10);
-                fn[fc].Size = new Size(30, 15);
-                string qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "pVar";
-
-                xx = fc;
-                yy = fc;
-                ww = fc;
-                hh = fc;
-
-                fc++;
-                qq++;
-
-                Label ll = new Label();
-                ll.Location = new Point(e.X - 54, e.Y + 40);
-                ll.Size = new Size(50, 20);
-                ll.Text = "Print ";
-                ll.Font = new Font("Arial", 12);
-                ll.ForeColor = Color.Black;
-                Controls.Add(ll);
-
-                p = e.X-5;
-                q = e.Y + 40;
-
-                X[xx] = p;
-                Y[yy] = q;
-                W[ww] = 60;
-                H[hh] = 20;
-
-                li++;
-                ti++;
-                bi++;
-
-                Invalidate();
-            }
-            else if(isCondition==true)
-            {
-                pointsCondition.Add(new Point(e.X, e.Y));
-
-                isCondition = false;
-
-                //Label ls = new Label();
-                l[li] = new Label();
-                l[li].Location = new Point(350, 200);
-                l[li].Size = new Size(300, 100);
-                l[li].BackColor = Color.Bisque;
-                l[li].Text = "Condition?";
-                l[li].Font = new Font("Ariel", 12);
-
-                //TextBox ts = new TextBox();
-                t[ti] = new TextBox();
-                t[ti].Location = new Point(380, 250);
-                t[ti].BackColor = Color.AntiqueWhite;
-
-                //Button bs = new Button();
-                b[bi] = new Button();
-                b[bi].Parent = this;
-                b[bi].Location = new System.Drawing.Point(580, 255);
-                b[bi].Size = new System.Drawing.Size(35, 20);
-                b[bi].Name = "New_bs";
-                b[bi].Text = "Ok";
-
-                z = ti;
-                x = li;
-                y = bi;
-
-                pp = fc;
-
-                Console.WriteLine("Hey There!!\n");
-
-                b[bi].Click += (sender1, ex) => this.DisplayCondition();
-
-                Controls.Add(b[bi]);
-                Controls.Add(t[ti]);
-                Controls.Add(l[li]);
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 45, e.Y + 10);
-                fn[fc].Size = new Size(30, 15);
-                string qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "condition";
-
-                xx = fc;
-                yy = fc;
-                ww = fc;
-                hh = fc;
-
-                fc++;
-                qq++;
-
-                rr = fc;
-
-                p = e.X - 48;
-                q = e.Y + 90;
-
-                X[xx] = p;
-                Y[yy] = q;
-                W[ww] = 75;
-                H[hh] = 20;
-
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X + 140, e.Y + 145);
-                fn[fc].Size = new Size(30, 15);
-                qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "conditionT";
-
-                xx = fc;
-                yy = fc;
-                ww = fc;
-                hh = fc;
-
-                fc++;
-                qq++;
-
-                Console.WriteLine("Hey There!! 2 \n");
-
-                ss = fc;
-
-                pt = e.X + 87;
-                qt = e.Y + 180;
-
-                X[xx] = pt;
-                Y[yy] = qt;
-                W[ww] = 60;
-                H[hh] = 20;
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 160, e.Y + 145);
-                fn[fc].Size = new Size(30, 15);
-                qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "conditionF";
-
-                xx = fc;
-                yy = fc;
-                ww = fc;
-                hh = fc;
-
-                fc++;
-                qq++;
-
-                Console.WriteLine("Hey There!!  3 \n");
-
-                Console.WriteLine("rr = " +rr + "\nss = "+ss);
-
-                pf = e.X - 152;
-                qf = e.Y + 180;
-
-                X[xx] = pf;
-                Y[yy] = qf;
-                W[ww] = 60;
-                H[hh] = 20;      
-
-                li++;
-                ti++;
-                bi++;
-
-                l[li] = new Label();
-                l[li].Location = new Point(e.X + 80, e.Y + 70);
-                l[li].Size = new Size(60, 20);
-                l[li].Text = "Yes";
-                l[li].Font = new Font("Ariel", 12);
-                
-
-                Controls.Add(l[li]);
-
-                li++;
-
-                l[li] = new Label();
-                l[li].Location = new Point(e.X - 115, e.Y + 70);
-                l[li].Size = new Size(45, 20);
-                l[li].Text = "No";
-                l[li].Font = new Font("Ariel", 12);
-
-                Controls.Add(l[li]);
-
-                li++;
-
-                Invalidate();
-            }
-            else if(isForLoop==true)
-            {
-                pointsForLoop.Add(new Point(e.X, e.Y));
-
-                isForLoop = false;
-
-                //Label ls = new Label();
-                l[li] = new Label();
-                l[li].Location = new Point(350, 200);
-                l[li].Size = new Size(300, 100);
-                l[li].BackColor = Color.Bisque;
-                l[li].Text = "Initialize ";
-                l[li].Font = new Font("Ariel", 12);
-
-                //TextBox ts = new TextBox();
-                t[ti] = new TextBox();
-                t[ti].Location = new Point(380, 250);
-                t[ti].BackColor = Color.AntiqueWhite;
-
-                // Button bs = new Button();
-                b[bi] = new Button();
-                b[bi].Parent = this;
-                b[bi].Location = new System.Drawing.Point(580, 255);
-                b[bi].Size = new System.Drawing.Size(30, 20);
-                b[bi].Name = "New_bs";
-                b[bi].Text = "Ok";
-
-                z = ti;
-                x = li;
-                y = bi;
-
-                pp = fc;
-
-                b[bi].Click += (sender1, ex) => this.DisplayForLoop();
-
-                Controls.Add(b[bi]);
-                Controls.Add(t[ti]);
-                Controls.Add(l[li]);
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 35, e.Y + 10);
-                fn[fc].Size = new Size(30, 15);
-                string qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "loopIn";
-
-                xx = fc;
-                yy = fc;
-                ww = fc;
-                hh = fc;
-
-                fc++;
-                qq++;
-
-                p = e.X - 15;
-                q = e.Y + 40;
-
-                X[xx] = p;
-                Y[yy] = q;
-                W[ww] = 52;
-                H[hh] = 20;
-
-                a1 = fc;
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 45, e.Y + 95);
-                fn[fc].Size = new Size(30, 15);
-                qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "loopCon";
-
-                xx = fc;
-                yy = fc;
-                ww = fc;
-                hh = fc;
-                
-                fc++;
-                qq++;
-
-                pcon = e.X - 48;
-                qcon = e.Y + 160;
-
-                X[xx] = pcon;
-                Y[yy] = qcon;
-                W[ww] = 75;
-                H[hh] = 20;
-
-                b1 = fc;
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 130, e.Y + 190);
-                fn[fc].Size = new Size(30, 15);
-                qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "loopID";
-
-                xx = fc;
-                yy = fc;
-                ww = fc;
-                hh = fc;
-
-                fc++;
-                qq++;
-
-                pind = e.X - 118;
-                qind = e.Y + 222;
-
-                X[xx] = pind;
-                Y[yy] = qind;
-                W[ww] = 52;
-                H[hh] = 20;
-
-                c1 = fc;
-
-                fn[fc] = new Label();
-                fn[fc].Location = new Point(e.X - 56, e.Y + 250);
-                fn[fc].Size = new Size(30, 15);
-                qs = qq.ToString();
-                fn[fc].Text = qs;
-                fn[fc].Font = new Font("Arial", 12);
-                fn[fc].ForeColor = Color.Black;
-                Controls.Add(fn[fc]);
-
-                fcn[fc] = "loopState";
-
-                xx = fc;
-                yy = fc;
-                ww = fc;
-                hh = fc;
-
-                fc++;
-                qq++;
-
-                pins = e.X - 48;
-                qins = e.Y + 285;
-
-                X[xx] = pins;
-                Y[yy] = qins;
-                W[ww] = 60;
-                H[hh] = 20;
-
-                li++;
-                ti++;
-                bi++;
-
-                Invalidate();
-            }
+            X[xx] = p;
+            Y[yy] = q;
+            W[ww] = 52;
+            H[hh] = 20;
+
+            a1 = fc;
+
+            fn[fc] = new Label();
+            fn[fc].Location = new Point(e.X - 45, e.Y + 95);
+            fn[fc].Size = new Size(30, 15);
+            qs = qq.ToString();
+            fn[fc].Text = qs;
+            fn[fc].Font = new Font("Arial", 12);
+            fn[fc].ForeColor = Color.Black;
+            Controls.Add(fn[fc]);
+
+            fcn[fc] = "loopCon";
+
+            xx = fc;
+            yy = fc;
+            ww = fc;
+            hh = fc;
+
+            fc++;
+            qq++;
+
+            pcon = e.X - 48;
+            qcon = e.Y + 160;
+
+            X[xx] = pcon;
+            Y[yy] = qcon;
+            W[ww] = 75;
+            H[hh] = 20;
+
+            b1 = fc;
+
+            fn[fc] = new Label();
+            fn[fc].Location = new Point(e.X - 130, e.Y + 190);
+            fn[fc].Size = new Size(30, 15);
+            qs = qq.ToString();
+            fn[fc].Text = qs;
+            fn[fc].Font = new Font("Arial", 12);
+            fn[fc].ForeColor = Color.Black;
+            Controls.Add(fn[fc]);
+
+            fcn[fc] = "loopID";
+
+            xx = fc;
+            yy = fc;
+            ww = fc;
+            hh = fc;
+
+            fc++;
+            qq++;
+
+            pind = e.X - 118;
+            qind = e.Y + 222;
+
+            X[xx] = pind;
+            Y[yy] = qind;
+            W[ww] = 52;
+            H[hh] = 20;
+
+            c1 = fc;
+
+            fn[fc] = new Label();
+            fn[fc].Location = new Point(e.X - 56, e.Y + 250);
+            fn[fc].Size = new Size(30, 15);
+            qs = qq.ToString();
+            fn[fc].Text = qs;
+            fn[fc].Font = new Font("Arial", 12);
+            fn[fc].ForeColor = Color.Black;
+            Controls.Add(fn[fc]);
+
+            fcn[fc] = "loopState";
+
+            xx = fc;
+            yy = fc;
+            ww = fc;
+            hh = fc;
+
+            fc++;
+            qq++;
+
+            pins = e.X - 48;
+            qins = e.Y + 285;
+
+            X[xx] = pins;
+            Y[yy] = qins;
+            W[ww] = 60;
+            H[hh] = 20;
+
+            li++;
+            ti++;
+            bi++;
+
+            Invalidate();
+        }
+
+        private void ConditionHandler(MouseEventArgs e)
+        {
+            pointsCondition.Add(new Point(e.X, e.Y));
+
+
+            //Label ls = new Label();
+            l[li] = new Label();
+            l[li].Location = new Point(350, 200);
+            l[li].Size = new Size(300, 100);
+            l[li].BackColor = Color.Bisque;
+            l[li].Text = "Condition?";
+            l[li].Font = new Font("Ariel", 12);
+
+            //TextBox ts = new TextBox();
+            t[ti] = new TextBox();
+            t[ti].Location = new Point(380, 250);
+            t[ti].BackColor = Color.AntiqueWhite;
+
+            //Button bs = new Button();
+            b[bi] = new Button();
+            b[bi].Parent = this;
+            b[bi].Location = new System.Drawing.Point(580, 255);
+            b[bi].Size = new System.Drawing.Size(35, 20);
+            b[bi].Name = "New_bs";
+            b[bi].Text = "Ok";
+
+            z = ti;
+            x = li;
+            y = bi;
+
+            pp = fc;
+
+            Console.WriteLine("Hey There!!\n");
+
+            b[bi].Click += (sender1, ex) => this.DisplayCondition();
+
+            Controls.Add(b[bi]);
+            Controls.Add(t[ti]);
+            Controls.Add(l[li]);
+
+            fn[fc] = new Label();
+            fn[fc].Location = new Point(e.X - 45, e.Y + 10);
+            fn[fc].Size = new Size(30, 15);
+            string qs = qq.ToString();
+            fn[fc].Text = qs;
+            fn[fc].Font = new Font("Arial", 12);
+            fn[fc].ForeColor = Color.Black;
+            Controls.Add(fn[fc]);
+
+            fcn[fc] = "condition";
+
+            xx = fc;
+            yy = fc;
+            ww = fc;
+            hh = fc;
+
+            fc++;
+            qq++;
+
+            rr = fc;
+
+            p = e.X - 48;
+            q = e.Y + 90;
+
+            X[xx] = p;
+            Y[yy] = q;
+            W[ww] = 75;
+            H[hh] = 20;
+
+
+            fn[fc] = new Label();
+            fn[fc].Location = new Point(e.X + 140, e.Y + 145);
+            fn[fc].Size = new Size(30, 15);
+            qs = qq.ToString();
+            fn[fc].Text = qs;
+            fn[fc].Font = new Font("Arial", 12);
+            fn[fc].ForeColor = Color.Black;
+            Controls.Add(fn[fc]);
+
+            fcn[fc] = "conditionT";
+
+            xx = fc;
+            yy = fc;
+            ww = fc;
+            hh = fc;
+
+            fc++;
+            qq++;
+
+
+            ss = fc;
+
+            pt = e.X + 87;
+            qt = e.Y + 180;
+
+            X[xx] = pt;
+            Y[yy] = qt;
+            W[ww] = 60;
+            H[hh] = 20;
+
+            fn[fc] = new Label();
+            fn[fc].Location = new Point(e.X - 160, e.Y + 145);
+            fn[fc].Size = new Size(30, 15);
+            qs = qq.ToString();
+            fn[fc].Text = qs;
+            fn[fc].Font = new Font("Arial", 12);
+            fn[fc].ForeColor = Color.Black;
+            Controls.Add(fn[fc]);
+
+            fcn[fc] = "conditionF";
+
+            xx = fc;
+            yy = fc;
+            ww = fc;
+            hh = fc;
+
+            fc++;
+            qq++;
+
+
+            Console.WriteLine("rr = " + rr + "\nss = " + ss);
+
+            pf = e.X - 152;
+            qf = e.Y + 180;
+
+            X[xx] = pf;
+            Y[yy] = qf;
+            W[ww] = 60;
+            H[hh] = 20;
+
+            li++;
+            ti++;
+            bi++;
+
+            l[li] = new Label();
+            l[li].Location = new Point(e.X + 80, e.Y + 70);
+            l[li].Size = new Size(60, 20);
+            l[li].Text = "Yes";
+            l[li].Font = new Font("Ariel", 12);
+
+
+            Controls.Add(l[li]);
+
+            li++;
+
+            l[li] = new Label();
+            l[li].Location = new Point(e.X - 115, e.Y + 70);
+            l[li].Size = new Size(45, 20);
+            l[li].Text = "No";
+            l[li].Font = new Font("Ariel", 12);
+
+            Controls.Add(l[li]);
+
+            li++;
+
+            Invalidate();
+        }
+
+        private void PrintHandler(MouseEventArgs e)
+        {
+            pointsPargram.Add(new Point(e.X, e.Y));
+
+
+            l[li] = new Label();
+            l[li].Location = new Point(350, 200);
+            l[li].Size = new Size(300, 100);
+            l[li].BackColor = Color.Bisque;
+            l[li].Text = "Print Output";
+            l[li].Font = new Font("Ariel", 12);
+
+            t[ti] = new TextBox();
+            t[ti].Location = new Point(380, 250);
+            t[ti].BackColor = Color.AntiqueWhite;
+
+            b[bi] = new Button();
+            b[bi].Parent = this;
+            b[bi].Location = new System.Drawing.Point(580, 255);
+            b[bi].Size = new System.Drawing.Size(35, 20);
+            b[bi].Text = "Ok";
+
+            z = ti;
+            x = li;
+            y = bi;
+
+            pp = fc;
+
+            b[bi].Click += (sender1, ex) => this.DisplayPrintVar();
+
+            Controls.Add(b[bi]);
+            Controls.Add(t[ti]);
+            Controls.Add(l[li]);
+
+            fn[fc] = new Label();
+            fn[fc].Location = new Point(e.X - 55, e.Y + 10);
+            fn[fc].Size = new Size(30, 15);
+            string qs = qq.ToString();
+            fn[fc].Text = qs;
+            fn[fc].Font = new Font("Arial", 12);
+            fn[fc].ForeColor = Color.Black;
+            Controls.Add(fn[fc]);
+
+            fcn[fc] = "pVar";
+
+            xx = fc;
+            yy = fc;
+            ww = fc;
+            hh = fc;
+
+            fc++;
+            qq++;
+
+            Label ll = new Label();
+            ll.Location = new Point(e.X - 54, e.Y + 40);
+            ll.Size = new Size(50, 20);
+            ll.Text = "Print ";
+            ll.Font = new Font("Arial", 12);
+            ll.ForeColor = Color.Black;
+            Controls.Add(ll);
+
+            p = e.X - 5;
+            q = e.Y + 40;
+
+            X[xx] = p;
+            Y[yy] = q;
+            W[ww] = 60;
+            H[hh] = 20;
+
+            li++;
+            ti++;
+            bi++;
+
+            Invalidate();
+        }
+
+        private void ScanHandler(MouseEventArgs e)
+        {
+            pointsPargram.Add(new Point(e.X, e.Y));
+
+
+            //Label ls = new Label();
+            l[li] = new Label();
+            l[li].Location = new Point(350, 200);
+            l[li].Size = new Size(300, 100);
+            l[li].BackColor = Color.Bisque;
+            l[li].Text = "Read Variables";
+            l[li].Font = new Font("Ariel", 12);
+
+            //TextBox ts = new TextBox();
+            t[ti] = new TextBox();
+            t[ti].Location = new Point(380, 250);
+            t[ti].BackColor = Color.AntiqueWhite;
+
+            // Button bs = new Button();
+            b[bi] = new Button();
+            b[bi].Parent = this;
+            b[bi].Location = new System.Drawing.Point(580, 255);
+            b[bi].Size = new System.Drawing.Size(35, 20);
+            b[bi].Name = "New_bs";
+            b[bi].Text = "Ok";
+
+            z = ti;
+            x = li;
+            y = bi;
+
+            pp = fc;
+
+            b[bi].Click += (sender1, ex) => this.DisplayReadVar();
+
+            Controls.Add(b[bi]);
+            Controls.Add(t[ti]);
+            Controls.Add(l[li]);
+
+            fn[fc] = new Label();
+            fn[fc].Location = new Point(e.X - 55, e.Y + 10);
+            fn[fc].Size = new Size(30, 15);
+            string qs = qq.ToString();
+            fn[fc].Text = qs;
+            fn[fc].Font = new Font("Arial", 12);
+            fn[fc].ForeColor = Color.Black;
+            Controls.Add(fn[fc]);
+
+            fcn[fc] = "rVar";
+
+            xx = fc;
+            yy = fc;
+            ww = fc;
+            hh = fc;
+
+            fc++;
+            qq++;
+
+            Label ll = new Label();
+            ll.Location = new Point(e.X - 54, e.Y + 40);
+            ll.Size = new Size(50, 20);
+            ll.Text = "Read";
+            ll.Font = new Font("Arial", 12);
+            ll.ForeColor = Color.Black;
+            Controls.Add(ll);
+
+            p = e.X - 5;
+            q = e.Y + 40;
+
+            X[xx] = p;
+            Y[yy] = q;
+            W[ww] = 60;
+            H[hh] = 20;
+
+            li++;
+            bi++;
+            ti++;
+
+            Invalidate();
+        }
+
+        private void VarHandler(MouseEventArgs e)
+        {
+            pointsPargram.Add(new Point(e.X, e.Y));
+
+
+            l[li] = new Label();
+            l[li].Location = new Point(350, 200);
+            l[li].Size = new Size(300, 100);
+            l[li].BackColor = Color.Bisque;
+            l[li].Text = "Take Variables";
+            l[li].Font = new Font("Ariel", 12);
+
+            t[ti] = new TextBox();
+            t[ti].Location = new Point(380, 250);
+            t[ti].BackColor = Color.AntiqueWhite;
+
+            b[bi] = new Button();
+            b[bi].Parent = this;
+            b[bi].Location = new System.Drawing.Point(580, 255);
+            b[bi].Size = new System.Drawing.Size(60, 30);
+            b[bi].Name = "New_b";
+            b[bi].Text = "Ok";
+
+            z = ti;
+            x = li;
+            y = bi;
+
+            pp = fc;
+
+            b[bi].Click += (sender1, ex) => this.DisplayTakeVar();
+
+            Controls.Add(b[bi]);
+            Controls.Add(t[ti]);
+            Controls.Add(l[li]);
+
+            fn[fc] = new Label();
+            fn[fc].Location = new Point(e.X - 55, e.Y + 10);
+            fn[fc].Size = new Size(30, 15);
+            string qs = qq.ToString();
+            fn[fc].Text = qs;
+            fn[fc].Font = new Font("Arial", 12);
+            fn[fc].ForeColor = Color.Black;
+            Controls.Add(fn[fc]);
+
+            fcn[fc] = "tVar";
+
+            xx = fc;
+            yy = fc;
+            ww = fc;
+            hh = fc;
+
+            fc++;
+            qq++;
+
+            Label ll = new Label();
+            ll.Location = new Point(e.X - 60, e.Y + 40);
+            ll.Size = new Size(35, 20);
+            ll.Text = "int";
+            ll.Font = new Font("Arial", 14);
+            ll.ForeColor = Color.Black;
+            Controls.Add(ll);
+
+            p = e.X - 27;
+            q = e.Y + 40;
+
+            X[xx] = p;
+            Y[yy] = q;
+            W[ww] = 60;
+            H[hh] = 20;
+
+            li++;
+            bi++;
+            ti++;
+
+            Invalidate();
+        }
+
+        private void RectHandler(MouseEventArgs e)
+        {
+            pointsRect.Add(new Point(e.X, e.Y));
+
+
+            //TextBox t = new TextBox();
+            l[li] = new Label();
+            l[li].Location = new Point(350, 200);
+            l[li].Size = new Size(300, 100);
+            l[li].BackColor = Color.Bisque;
+            l[li].Text = "Process : ";
+            l[li].Font = new Font("Ariel", 12);
+
+            t[ti] = new TextBox();
+            t[ti].Location = new Point(380, 250);
+            t[ti].BackColor = Color.AntiqueWhite;
+
+            b[bi] = new Button();
+            b[bi].Parent = this;
+            b[bi].Location = new System.Drawing.Point(580, 255);
+            b[bi].Size = new System.Drawing.Size(60, 30);
+            b[bi].Name = "New_b";
+            b[bi].Text = "Ok";
+
+            z = ti;
+            x = li;
+            y = bi;
+
+            pp = fc;
+
+            b[bi].Click += (sender1, ex) => this.DisplayProcess();
+
+            Controls.Add(b[bi]);
+            Controls.Add(t[ti]);
+            Controls.Add(l[li]);
+
+            fn[fc] = new Label();
+            fn[fc].Location = new Point(e.X - 55, e.Y + 10);
+            fn[fc].Size = new Size(30, 15);
+            string qs = qq.ToString();
+            fn[fc].Text = qs;
+            fn[fc].Font = new Font("Arial", 12);
+            fn[fc].ForeColor = Color.Black;
+            Controls.Add(fn[fc]);
+
+            fcn[fc] = "process";
+
+            xx = fc;
+            yy = fc;
+            ww = fc;
+            hh = fc;
+            //pp = fc;
+
+            fc++;
+            qq++;
+
+            str = t[ti].Text;
+
+            p = e.X - 45;
+            q = e.Y + 40;
+
+            X[xx] = p;
+            Y[yy] = q;
+            W[ww] = 60;
+            H[hh] = 20;
+
+            li++;
+            bi++;
+            ti++;
+
+            Invalidate();
+        }
+
+        private void EndCircleHandler(MouseEventArgs e)
+        {
+            pointsECircle.Add(new Point(e.X, e.Y));
+
+            var control = new EndCircleControl( e, qq);
+            var controls = control.Handler();
+            Controls.AddRange(controls.ToArray());
+
+            fcn[fc] = control.CodeFn();
+            code[cc] = control.Code();
+            codeC[cc] = control.CodeC();
+            cc++;
+            fc++;
+            qq++;
+
+            Invalidate();
+        }
+
+        private void CircleHandler(MouseEventArgs e)
+        {
+            pointsCircle.Add(new Point(e.X, e.Y));
+
+
+            var control = new StartCirceControl(e, qq);
+            var controls = control.Handler();
+            Controls.AddRange(controls.ToArray());
+
+            fcn[fc] = control.CodeFn();
+            code[cc] = control.Code();
+            codeC[cc] = control.CodeC();
+
+            fc++;
+            qq++;
+            cc++;
+
+            Invalidate();
         }
 
         private void DisplayCondition()
@@ -1075,7 +990,7 @@ namespace Graphics_Test
             codeC[cc] = "else\n    {\n        " + t2[z].Text + ";\n    }";
             cc++;
 
-            P[ss] = P[rr]+2;
+            P[ss] = P[rr] + 2;
             temp1 = lti;
 
             /*Console.WriteLine(pp);
@@ -1139,7 +1054,7 @@ namespace Graphics_Test
             l2[lti].BackColor = Color.Bisque;
             l2[lti].Text = "Condition?";
             l2[lti].Font = new Font("Ariel", 12);
-            
+
             t2[tti] = new TextBox();
             t2[tti].Location = new Point(380, 250);
             t2[tti].BackColor = Color.AntiqueWhite;
@@ -1441,14 +1356,10 @@ namespace Graphics_Test
             l2[lti].Text = t[z].Text;
             P[pp] = lti;
 
-            code[cc] = "int " + t[z].Text + " ;" ;
+            code[cc] = "int " + t[z].Text + " ;";
             codeC[cc] = "int " + t[z].Text + " ;";
             cc++;
 
-            //Console.WriteLine(pp);
-            //Console.WriteLine(lti);
-            //Console.WriteLine(P[pp]);
-            //Console.WriteLine("I Got TakeVar");
             l2[lti].Font = new Font("Arial", 12);
             l2[lti].ForeColor = Color.Black;
             Controls.Add(l2[lti]);
@@ -1593,7 +1504,7 @@ namespace Graphics_Test
 
             lti++;
 
-            if(fcn[index]=="process")
+            if (fcn[index] == "process")
             {
                 code[index] = wx + ";";
                 codeC[index] = wx + ";";
@@ -1642,20 +1553,20 @@ namespace Graphics_Test
                 sss[0] = wx;
             }
 
-          
+
 
             else if (fcn[index] == "loopCon")
             {
-                code[index-1] = "for(" + sss[0] + ";" + wx + ";" + sss[2] + ")\n    {";
-                codeC[index-1] = "for(" + sss[0] + ";" + wx + ";" + sss[2] + ")\n    {";
+                code[index - 1] = "for(" + sss[0] + ";" + wx + ";" + sss[2] + ")\n    {";
+                codeC[index - 1] = "for(" + sss[0] + ";" + wx + ";" + sss[2] + ")\n    {";
                 sss[1] = wx;
             }
 
 
             else if (fcn[index] == "loopID")
             {
-                code[index-2] = "for(" + sss[0] + ";" + sss[1] + ";" + wx + ")\n    {";
-                codeC[index-2] = "for(" + sss[0] + ";" + sss[1] + ";" + wx + ")\n    {";
+                code[index - 2] = "for(" + sss[0] + ";" + sss[1] + ";" + wx + ")\n    {";
+                codeC[index - 2] = "for(" + sss[0] + ";" + sss[1] + ";" + wx + ")\n    {";
                 sss[2] = wx;
             }
 
@@ -1681,7 +1592,7 @@ namespace Graphics_Test
 
             //l2[lti].Text = for(int zz=0;zz<cc;zz++)
 
-            for(int zz=1;zz<cc;zz++)
+            for (int zz = 1; zz < cc; zz++)
             {
                 if (zz == 1)
                     l2[lti].Text += code[zz] + "\n";
@@ -1695,7 +1606,7 @@ namespace Graphics_Test
             x = lti;
             y = bti;
 
-            
+
             b2[bti] = new Button();
             b2[bti].Parent = this;
             b2[bti].Location = new System.Drawing.Point(500, 480);
@@ -1760,42 +1671,45 @@ namespace Graphics_Test
             l2[x].Dispose();
             b2[y].Dispose();
             b2[z].Dispose();
-            
+
 
             x = lti;
             y = bti;
             z = tti;
-            
+
 
             Invalidate();
         }
 
         private void SaveInfo()
         {
-            if (File.Exists("F:\\3-1\\New SS\\Graphics_Test\\"+t2[z].Text+".c"))
+            var tempPath = System.IO.Path.GetTempPath();
+            var filename = $"{t2[z].Text}.c";
+            var fullPath = Path.Combine(tempPath, filename);
+
+            if (File.Exists(fullPath))
             {
                 MessageBox.Show("File already exists");
             }
             else
             {
-                StreamWriter sw = new StreamWriter("F:\\3-1\\New SS\\Graphics_Test\\" + t2[z].Text + ".c");
 
-                //sw.WriteLine("Hello World!");
-
-                for (int zz = 1; zz < cc; zz++)
+                using (StreamWriter sw = new StreamWriter(fullPath))
                 {
-                    if (zz == 1)
-                        sw.WriteLine(codeC[zz]);
-                    //l2[lti].Text += code[zz] + "\n";
-                    else if (codeC[zz] == "-1")
-                        continue;
-                    else
-                        sw.WriteLine("    " + codeC[zz]);
-                        //l2[lti].Text += "    " + code[zz] + "\n";
-                    //sw.WriteLine(l2[codeField].Text);
+                    for (int zz = 1; zz < cc; zz++)
+                    {
+                        if (zz == 1)
+                            sw.WriteLine(codeC[zz]);
+
+                        else if (codeC[zz] == "-1")
+                            continue;
+                        else
+                            sw.WriteLine("    " + codeC[zz]);
+                    }
+
+                    sw.Close();
                 }
-                //sw.WriteLine(l2[codeField].Text);
-                sw.Close();
+                Console.WriteLine($"Saved file in {fullPath}");
             }
 
             l2[x].Dispose();
@@ -1821,33 +1735,28 @@ namespace Graphics_Test
             Environment.Exit(0);
         }
 
-
-
-        private void MainForm_MouseUp(object sender, MouseEventArgs e)
-        {
-            
-        }
-
-        private void MainForm_MouseMove(object sender, MouseEventArgs e)
-        {
-
-        }
-
-
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
             Graphics gp = e.Graphics;
+            DrawStart(gp);
 
-            foreach (Point p in pointsCircle)
-            {
-                gp.DrawEllipse(new Pen(Color.Black, 2), p.X, p.Y, 120, 50);
-                // MessageBox.Show(p.ToString());
-                // MessageBox.Show(p.ToString());
-            }
+            DrawEnd(gp);
 
-            foreach(Point p in pointsECircle)
+            DrawRect(gp);
+
+            DrawConnect(gp);
+
+            DrawParams(gp);
+
+            DrawCondition(gp);
+            DrawLoop(gp);
+        }
+
+        private void DrawLoop(Graphics gp)
+        {
+            using (var pp = new Pen(Color.Black, 2))
             {
-                using (var pp = new Pen(Color.Black, 2))
+                foreach (Point p in pointsForLoop)
                 {
                     int sx = p.X;
                     int sy = p.Y;
@@ -1857,87 +1766,33 @@ namespace Graphics_Test
                     Point p2 = new Point(ex, ey);
                     gp.DrawLine(pp, p1, p2);
 
-                    Point p3 = new Point(p.X, p.Y + 30);
-                    Point p4 = new Point(p.X - 10, p.Y + 25);
-                    gp.DrawLine(pp, p3, p4);
+                    gp.DrawRectangle(pp, p.X - 40, p.Y + 30, 80, 40);
 
-                    Point p5 = new Point(p.X, p.Y + 30);
-                    Point p6 = new Point(p.X + 10, p.Y + 25);
-                    gp.DrawLine(pp, p5, p6);
-                    //MessageBox.Show(p.ToString());
-                }
-                gp.DrawEllipse(new Pen(Color.Black, 2), p.X-60, p.Y+31, 120, 50);
-            }
+                    gp.DrawLine(pp, new Point(p.X, p.Y + 70), new Point(p.X, p.Y + 100));
 
-            foreach (Point p in pointsRect)
-            {
+                    gp.DrawLine(pp, new Point(p.X, p.Y + 100), new Point(p.X - 70, p.Y + 170));
+                    gp.DrawLine(pp, new Point(p.X - 70, p.Y + 170), new Point(p.X, p.Y + 240));
+                    gp.DrawLine(pp, new Point(p.X, p.Y + 240), new Point(p.X + 70, p.Y + 170));
+                    gp.DrawLine(pp, new Point(p.X + 70, p.Y + 170), new Point(p.X, p.Y + 100));
 
-                using (var pp = new Pen(Color.Black, 2))
-                {
-                    int sx = p.X;
-                    int sy = p.Y;
-                    int ex = p.X;
-                    int ey = p.Y + 30;
-                    Point p1 = new Point(sx, sy);
-                    Point p2 = new Point(ex, ey);
-                    gp.DrawLine(pp, p1, p2);
+                    gp.DrawLine(pp, new Point(p.X, p.Y + 240), new Point(p.X, p.Y + 270));
 
-                    Point p3 = new Point(p.X, p.Y+30);
-                    Point p4 = new Point(p.X-10, p.Y+25);
-                    gp.DrawLine(pp, p3, p4);
+                    gp.DrawRectangle(pp, p.X - 50, p.Y + 270, 100, 40);
 
-                    Point p5 = new Point(p.X, p.Y+30);
-                    Point p6 = new Point(p.X + 10, p.Y + 25);
-                    gp.DrawLine(pp, p5, p6);
-                    //MessageBox.Show(p.ToString());
-                }
-                gp.DrawRectangle(new Pen(Color.Black, 2), p.X - 60, p.Y+32, 120, 50);
-               // MessageBox.Show(p.ToString());
-            }
+                    gp.DrawLine(pp, new Point(p.X - 50, p.Y + 290), new Point(p.X - 90, p.Y + 290));
+                    gp.DrawLine(pp, new Point(p.X - 90, p.Y + 290), new Point(p.X - 90, p.Y + 250));
+                    gp.DrawRectangle(pp, p.X - 120, p.Y + 210, 60, 40);
+                    gp.DrawLine(pp, new Point(p.X - 90, p.Y + 210), new Point(p.X - 90, p.Y + 170));
+                    gp.DrawLine(pp, new Point(p.X - 90, p.Y + 170), new Point(p.X - 70, p.Y + 170));
 
-            foreach (Point p in pointsConnect)
-            {
-               using (var pp = new Pen(Color.Black, 4))
-               {
-                    int sx = p.X;
-                    int sy = p.Y;
-                    int ex = p.X;
-                    int ey = p.Y + 60;
-                    Point p1 = new Point(sx, sy);
-                    Point p2 = new Point(ex, ey);
-                    gp.DrawLine(pp, p1, p2);
-                    //MessageBox.Show(p.ToString());
+                    gp.DrawLine(pp, new Point(p.X + 70, p.Y + 170), new Point(p.X + 90, p.Y + 170));
+                    gp.DrawLine(pp, new Point(p.X + 90, p.Y + 170), new Point(p.X + 90, p.Y + 310));
                 }
             }
+        }
 
-            foreach(Point p in pointsPargram)
-            {
-                using (var pp = new Pen(Color.Black, 2))
-                {
-                    int sx = p.X;
-                    int sy = p.Y;
-                    int ex = p.X;
-                    int ey = p.Y + 30;
-                    Point p1 = new Point(sx, sy);
-                    Point p2 = new Point(ex, ey);
-                    gp.DrawLine(pp, p1, p2);
-
-                    Point p3 = new Point(p.X, p.Y + 30);
-                    Point p4 = new Point(p.X - 10, p.Y + 25);
-                    gp.DrawLine(pp, p3, p4);
-
-                    Point p5 = new Point(p.X, p.Y + 30);
-                    Point p6 = new Point(p.X + 10, p.Y + 25);
-                    gp.DrawLine(pp, p5, p6);
-                    //MessageBox.Show(p.ToString());
-                }
-                gp.DrawLine(new Pen(Color.Black, 2), new Point(p.X - 60, p.Y + 32), new Point(p.X + 60, p.Y + 32));
-                gp.DrawLine(new Pen(Color.Black, 2), new Point(p.X - 60, p.Y + 32), new Point(p.X - 70, p.Y + 75));
-                gp.DrawLine(new Pen(Color.Black, 2), new Point(p.X - 70, p.Y + 75), new Point(p.X + 50, p.Y + 75));
-                gp.DrawLine(new Pen(Color.Black, 2), new Point(p.X + 50, p.Y + 75), new Point(p.X + 60, p.Y + 32));
-
-            }
-
+        private void DrawCondition(Graphics gp)
+        {
             foreach (Point p in pointsCondition)
             {
                 using (var pp = new Pen(Color.Black, 2))
@@ -1973,8 +1828,11 @@ namespace Graphics_Test
                     gp.DrawLine(pp, new Point(p.X - 120, p.Y + 260), new Point(p.X + 120, p.Y + 260));
                 }
             }
+        }
 
-            foreach (Point p in pointsForLoop)
+        private void DrawParams(Graphics gp)
+        {
+            foreach (Point p in pointsPargram)
             {
                 using (var pp = new Pen(Color.Black, 2))
                 {
@@ -1986,28 +1844,101 @@ namespace Graphics_Test
                     Point p2 = new Point(ex, ey);
                     gp.DrawLine(pp, p1, p2);
 
-                    gp.DrawRectangle(pp, p.X - 40, p.Y + 30, 80, 40);
+                    Point p3 = new Point(p.X, p.Y + 30);
+                    Point p4 = new Point(p.X - 10, p.Y + 25);
+                    gp.DrawLine(pp, p3, p4);
 
-                    gp.DrawLine(pp, new Point(p.X, p.Y + 70), new Point(p.X, p.Y + 100));
-
-                    gp.DrawLine(pp, new Point(p.X, p.Y + 100), new Point(p.X - 70, p.Y + 170));
-                    gp.DrawLine(pp, new Point(p.X-70, p.Y + 170), new Point(p.X, p.Y + 240));
-                    gp.DrawLine(pp, new Point(p.X, p.Y + 240), new Point(p.X + 70, p.Y + 170));
-                    gp.DrawLine(pp, new Point(p.X + 70, p.Y + 170), new Point(p.X, p.Y + 100));
-
-                    gp.DrawLine(pp, new Point(p.X, p.Y + 240), new Point(p.X, p.Y + 270));
-
-                    gp.DrawRectangle(pp, p.X - 50, p.Y + 270, 100, 40);
-
-                    gp.DrawLine(pp, new Point(p.X - 50, p.Y + 290), new Point(p.X - 90, p.Y + 290));
-                    gp.DrawLine(pp, new Point(p.X - 90, p.Y + 290), new Point(p.X - 90, p.Y + 250));
-                    gp.DrawRectangle(pp, p.X - 120, p.Y + 210, 60, 40);
-                    gp.DrawLine(pp, new Point(p.X-90, p.Y + 210), new Point(p.X - 90, p.Y + 170));
-                    gp.DrawLine(pp, new Point(p.X-90, p.Y + 170), new Point(p.X - 70, p.Y + 170));
-
-                    gp.DrawLine(pp, new Point(p.X + 70, p.Y + 170), new Point(p.X + 90, p.Y + 170));
-                    gp.DrawLine(pp, new Point(p.X + 90, p.Y + 170), new Point(p.X + 90, p.Y + 310));
+                    Point p5 = new Point(p.X, p.Y + 30);
+                    Point p6 = new Point(p.X + 10, p.Y + 25);
+                    gp.DrawLine(pp, p5, p6);
+                    //MessageBox.Show(p.ToString());
                 }
+                gp.DrawLine(new Pen(Color.Black, 2), new Point(p.X - 60, p.Y + 32), new Point(p.X + 60, p.Y + 32));
+                gp.DrawLine(new Pen(Color.Black, 2), new Point(p.X - 60, p.Y + 32), new Point(p.X - 70, p.Y + 75));
+                gp.DrawLine(new Pen(Color.Black, 2), new Point(p.X - 70, p.Y + 75), new Point(p.X + 50, p.Y + 75));
+                gp.DrawLine(new Pen(Color.Black, 2), new Point(p.X + 50, p.Y + 75), new Point(p.X + 60, p.Y + 32));
+
+            }
+        }
+
+        private void DrawConnect(Graphics gp)
+        {
+            foreach (Point p in pointsConnect)
+            {
+                using (var pp = new Pen(Color.Black, 4))
+                {
+                    int sx = p.X;
+                    int sy = p.Y;
+                    int ex = p.X;
+                    int ey = p.Y + 60;
+                    Point p1 = new Point(sx, sy);
+                    Point p2 = new Point(ex, ey);
+                    gp.DrawLine(pp, p1, p2);
+                    //MessageBox.Show(p.ToString());
+                }
+            }
+        }
+
+        private void DrawRect(Graphics gp)
+        {
+            foreach (Point p in pointsRect)
+            {
+
+                using (var pp = new Pen(Color.Black, 2))
+                {
+                    int sx = p.X;
+                    int sy = p.Y;
+                    int ex = p.X;
+                    int ey = p.Y + 30;
+                    Point p1 = new Point(sx, sy);
+                    Point p2 = new Point(ex, ey);
+                    gp.DrawLine(pp, p1, p2);
+
+                    Point p3 = new Point(p.X, p.Y + 30);
+                    Point p4 = new Point(p.X - 10, p.Y + 25);
+                    gp.DrawLine(pp, p3, p4);
+
+                    Point p5 = new Point(p.X, p.Y + 30);
+                    Point p6 = new Point(p.X + 10, p.Y + 25);
+                    gp.DrawLine(pp, p5, p6);
+                    //MessageBox.Show(p.ToString());
+                }
+                gp.DrawRectangle(new Pen(Color.Black, 2), p.X - 60, p.Y + 32, 120, 50);
+                // MessageBox.Show(p.ToString());
+            }
+        }
+
+        private void DrawEnd(Graphics gp)
+        {
+            foreach (Point p in pointsECircle)
+            {
+                using (var pp = new Pen(Color.Black, 2))
+                {
+                    int sx = p.X;
+                    int sy = p.Y;
+                    int ex = p.X;
+                    int ey = p.Y + 30;
+                    Point p1 = new Point(sx, sy);
+                    Point p2 = new Point(ex, ey);
+                    gp.DrawLine(pp, p1, p2);
+
+                    Point p3 = new Point(p.X, p.Y + 30);
+                    Point p4 = new Point(p.X - 10, p.Y + 25);
+                    gp.DrawLine(pp, p3, p4);
+
+                    Point p5 = new Point(p.X, p.Y + 30);
+                    Point p6 = new Point(p.X + 10, p.Y + 25);
+                    gp.DrawLine(pp, p5, p6);
+                }
+                gp.DrawEllipse(new Pen(Color.Black, 2), p.X - 60, p.Y + 31, 120, 50);
+            }
+        }
+
+        private void DrawStart(Graphics gp)
+        {
+            foreach (Point p in pointsCircle)
+            {
+                gp.DrawEllipse(new Pen(Color.Black, 2), p.X, p.Y, 120, 50);
             }
         }
     }

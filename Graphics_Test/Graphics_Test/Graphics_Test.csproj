@@ -46,6 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\BaseFlowControl.cs" />
+    <Compile Include="Controls\EndCircleControl.cs" />
+    <Compile Include="Controls\IFlowControl.cs" />
+    <Compile Include="Controls\StartCirceControl.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -41,3 +41,13 @@ F:\3-1\New SS\Graphics_Test\Graphics_Test\obj\Debug\Graphics_Test.pdb
 F:\3-1\New SS\Graphics_Test\Graphics_Test\bin\Debug\Graphics_Test.exe.config
 F:\3-1\New SS\Graphics_Test\Graphics_Test\bin\Debug\Graphics_Test.exe
 F:\3-1\New SS\Graphics_Test\Graphics_Test\bin\Debug\Graphics_Test.pdb
+D:\projects\CSEKU_SDP_2019_C_SOURCE_CODE_GENERATOR_FROM_FLOWCHART\Graphics_Test\Graphics_Test\bin\Debug\Graphics_Test.exe.config
+D:\projects\CSEKU_SDP_2019_C_SOURCE_CODE_GENERATOR_FROM_FLOWCHART\Graphics_Test\Graphics_Test\bin\Debug\Graphics_Test.exe
+D:\projects\CSEKU_SDP_2019_C_SOURCE_CODE_GENERATOR_FROM_FLOWCHART\Graphics_Test\Graphics_Test\bin\Debug\Graphics_Test.pdb
+D:\projects\CSEKU_SDP_2019_C_SOURCE_CODE_GENERATOR_FROM_FLOWCHART\Graphics_Test\Graphics_Test\obj\Debug\Graphics_Test.csprojAssemblyReference.cache
+D:\projects\CSEKU_SDP_2019_C_SOURCE_CODE_GENERATOR_FROM_FLOWCHART\Graphics_Test\Graphics_Test\obj\Debug\Graphics_Test.MainForm.resources
+D:\projects\CSEKU_SDP_2019_C_SOURCE_CODE_GENERATOR_FROM_FLOWCHART\Graphics_Test\Graphics_Test\obj\Debug\Graphics_Test.output.resources
+D:\projects\CSEKU_SDP_2019_C_SOURCE_CODE_GENERATOR_FROM_FLOWCHART\Graphics_Test\Graphics_Test\obj\Debug\Graphics_Test.Properties.Resources.resources
+D:\projects\CSEKU_SDP_2019_C_SOURCE_CODE_GENERATOR_FROM_FLOWCHART\Graphics_Test\Graphics_Test\obj\Debug\Graphics_Test.csproj.GenerateResource.cache
+D:\projects\CSEKU_SDP_2019_C_SOURCE_CODE_GENERATOR_FROM_FLOWCHART\Graphics_Test\Graphics_Test\obj\Debug\Graphics_Test.exe
+D:\projects\CSEKU_SDP_2019_C_SOURCE_CODE_GENERATOR_FROM_FLOWCHART\Graphics_Test\Graphics_Test\obj\Debug\Graphics_Test.pdb
